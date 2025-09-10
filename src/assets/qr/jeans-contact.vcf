@@ -1,0 +1,14 @@
+BEGIN:VCARD
+VERSION:3.0
+FN:JEANS ENRIQUE MALON REYNA
+N:MALON REYNA;JEANS ENRIQUE;;;
+ORG:Smart Digital Tec
+TITLE:Desarrollador Web
+TEL;TYPE=CELL:+51955365043
+EMAIL:sistema5000smart@gmail.com
+URL:https://portafolio.smartdigitaltec.com
+ADR;TYPE=HOME:;;Lima;;PE;
+NOTE:Especializado en desarrollo web moderno con Angular, React, Laravel y diseño centrado en el usuario.
+PHOTO:https://tarjeta-jeans.smartdigitaltec.com/assets/foto/perfil.png
+X-SOCIALPROFILE;TYPE=facebook:https://www.facebook.com/jeansenrique.malonreyna
+END:VCARD

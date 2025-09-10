@@ -1,0 +1,93 @@
+{
+  "name": "Tarjeta Digital - Perfil Profesional",
+  "short_name": "Tarjeta Digital",
+  "description": "Especializado en desarrollo web moderno. Conecta conmigo a través de mi tarjeta digital interactiva.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#00ffff",
+  "background_color": "#000000",
+  "scope": "/",
+  "lang": "es-ES",
+  "dir": "ltr",
+  "categories": ["business", "productivity", "social"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "assets/pwa/apple-touch-icon-180x180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/pwa/icon_JE_192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/pwa/icon_JE_512_maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/pwa/icon_JE_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/pwa/logo_JE_1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Ver Tarjeta Digital",
+      "short_name": "Tarjeta",
+      "description": "Acceso directo a mi tarjeta digital",
+      "url": "/",
+      "icons": [
+        {
+          "src": "assets/pwa/icon_JE_192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "/",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "screenshots": [
+    {
+      "src": "assets/pwa/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Vista desktop de la tarjeta digital"
+    },
+    {
+      "src": "assets/pwa/screenshot-narrow.png",
+      "sizes": "360x640",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Vista móvil de la tarjeta digital"
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "mailto",
+      "url": "/?email=%s"
+    }
+  ]
+}
