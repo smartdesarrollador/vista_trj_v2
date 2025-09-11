@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  urlDominioApi: 'http://localhost:8000',
-  urlRaiz: 'http://localhost:8000/api',
-  apiUrl: 'http://localhost:8000/api',
+  urlDominioApi: 'https://api-tarjeta-holografico.smartdigitaltec.com',
+  urlRaiz: 'https://api-tarjeta-holografico.smartdigitaltec.com/api',
+  apiUrl: 'https://api-tarjeta-holografico.smartdigitaltec.com/api',
 };

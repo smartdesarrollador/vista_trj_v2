@@ -151,9 +151,8 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
       return photo;
     }
     
-    // Construir URL completa para imágenes locales usando environment
-    const baseUrl = environment.apiUrl.replace('/api', '');
-    return `${baseUrl}/${photo}`;
+    // Construir URL completa para imágenes locales usando urlDominioApi
+    return `${environment.urlDominioApi}/${photo}`;
   }
 
   private initializeQuantumEffects(): void {
