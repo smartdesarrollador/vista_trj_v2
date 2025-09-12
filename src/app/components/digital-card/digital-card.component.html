@@ -636,8 +636,8 @@
     </h3>
 
     <!-- Dynamic QR Component -->
-    <div class="relative z-10">
-      <app-dynamic-qr></app-dynamic-qr>
+    <div class="relative z-10" *ngIf="displayData()">
+      <app-dynamic-qr [userCard]="displayData()"></app-dynamic-qr>
     </div>
   </div>
 

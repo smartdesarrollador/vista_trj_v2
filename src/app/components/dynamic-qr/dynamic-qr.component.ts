@@ -1,5 +1,7 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, OnInit, Inject, PLATFORM_ID, Input } from '@angular/core';
+import { CommonModule, isPlatformBrowser, DOCUMENT } from '@angular/common';
+import { DigitalCard } from '../../interfaces/digital-card.interface';
+import { environment } from '../../../environments/environment';
 
 interface QRAction {
   id: string;
@@ -145,51 +147,79 @@ interface QRAction {
 })
 export class DynamicQrComponent implements OnInit {
 
+  @Input() userCard: DigitalCard | null = null;
+
   showActions = false;
   currentQRSvg = '';
   currentAction: QRAction;
+  qrActions: QRAction[] = [];
 
-  qrActions: QRAction[] = [
-    {
-      id: 'vcard',
-      label: 'Guardar Contacto',
-      description: 'Escanéame para guardar mi contacto',
-      icon: '👤',
-      data: 'https://tarjeta-jeans.smartdigitaltec.com/assets/qr/jeans-contact.vcf',
-      type: 'vcard'
-    },
-    {
-      id: 'website',
-      label: 'Visitar Portfolio',
-      description: 'Escanéame para visitar mi portfolio',
-      icon: '🌐',
-      data: 'https://portafolio.smartdigitaltec.com',
-      type: 'url'
-    },
-    {
-      id: 'whatsapp',
-      label: 'WhatsApp Directo',
-      description: 'Escanéame para escribirme por WhatsApp',
-      icon: '💬',
-      data: 'https://wa.me/51955365043?text=Hola%20Jeans%2C%20vi%20tu%20tarjeta%20digital%20y%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20tus%20servicios%20de%20desarrollo%20web.',
-      type: 'whatsapp'
-    },
-    {
-      id: 'vcf-inline',
-      label: 'Contacto Offline',
-      description: 'Escanéame para guardar contacto (funciona sin internet)',
-      icon: '📱',
-      data: this.generateInlineVCard(),
-      type: 'vcf-inline'
-    }
-  ];
-
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-    this.currentAction = this.qrActions[0]; // Default to vCard
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(DOCUMENT) private document: Document
+  ) {
+    this.currentAction = { id: 'vcard', label: 'Guardar Contacto', description: 'Cargando...', icon: '👤', data: '', type: 'vcard' };
   }
 
   ngOnInit(): void {
-    this.generateQRCode(this.currentAction.data);
+    if (this.userCard) {
+      this.initializeQRActions();
+      this.currentAction = this.qrActions[0] || this.currentAction;
+      this.generateQRCode(this.currentAction.data);
+    }
+  }
+
+  private initializeQRActions(): void {
+    if (!this.userCard?.personal_info) return;
+
+    const userName = this.userCard.personal_info.name;
+    const whatsappMessage = encodeURIComponent(`Hola ${userName}, vi tu tarjeta digital y me interesa conocer más sobre tus servicios.`);
+    
+    // Get the base URL safely for SSR compatibility
+    const baseUrl = this.getBaseUrl();
+    
+    this.qrActions = [
+      {
+        id: 'vcard',
+        label: 'Guardar Contacto',
+        description: `Escanéame para guardar el contacto de ${userName}`,
+        icon: '👤',
+        data: `${baseUrl}/api/vcard/${this.userCard.slug}`,
+        type: 'vcard'
+      },
+      {
+        id: 'website',
+        label: 'Visitar Portfolio',
+        description: `Escanéame para visitar el portfolio de ${userName}`,
+        icon: '🌐',
+        data: this.userCard.contact_info?.website || `${baseUrl}/tarjeta/${this.userCard.slug}`,
+        type: 'url'
+      },
+      {
+        id: 'whatsapp',
+        label: 'WhatsApp Directo',
+        description: `Escanéame para escribir a ${userName} por WhatsApp`,
+        icon: '💬',
+        data: `https://wa.me/${this.userCard.contact_info?.whatsapp?.replace(/[^0-9]/g, '')}?text=${whatsappMessage}`,
+        type: 'whatsapp'
+      },
+      {
+        id: 'vcf-inline',
+        label: 'Contacto Offline',
+        description: 'Escanéame para guardar contacto (funciona sin internet)',
+        icon: '📱',
+        data: this.generateInlineVCard(),
+        type: 'vcf-inline'
+      }
+    ];
+  }
+
+  private getBaseUrl(): string {
+    if (isPlatformBrowser(this.platformId)) {
+      return window.location.origin;
+    }
+    // Fallback for SSR - use environment configuration
+    return environment.siteUrl || 'https://tarjeta-holografico.smartdigitaltec.com';
   }
 
   toggleActions(): void {
@@ -239,18 +269,29 @@ export class DynamicQrComponent implements OnInit {
   }
 
   private generateInlineVCard(): string {
+    if (!this.userCard?.personal_info) return '';
+
+    const personalInfo = this.userCard.personal_info;
+    const contactInfo = this.userCard.contact_info;
+    const aboutInfo = this.userCard.about_info;
+
     const vcard = `BEGIN:VCARD
 VERSION:3.0
-FN:JEANS ENRIQUE MALON REYNA
-N:MALON REYNA;JEANS ENRIQUE;;;
-ORG:Smart Digital Tec
-TITLE:Desarrollador Web
-TEL;TYPE=CELL:+51955365043
-EMAIL:sistema5000smart@gmail.com
-URL:https://portafolio.smartdigitaltec.com
-ADR;TYPE=HOME:;;Lima;;PE;
-NOTE:Especializado en desarrollo web moderno con Angular, React, Laravel y diseño centrado en el usuario.
-X-SOCIALPROFILE;TYPE=facebook:https://www.facebook.com/jeansenrique.malonreyna
+FN:${personalInfo.name}
+N:${personalInfo.name};;;;
+ORG:${personalInfo.title ? personalInfo.title.split(' - ')[0] || '' : ''}
+TITLE:${personalInfo.title ? personalInfo.title.split(' - ')[1] || personalInfo.title : ''}
+TEL;TYPE=CELL:${contactInfo?.whatsapp || contactInfo?.phone || ''}
+EMAIL:${contactInfo?.email || ''}
+URL:${contactInfo?.website || `${this.getBaseUrl()}/tarjeta/${this.userCard.slug}`}
+ADR;TYPE=HOME:;;${personalInfo.location || ''};;PE;
+NOTE:${aboutInfo?.description || ''}
+${contactInfo?.facebook ? `X-SOCIALPROFILE;TYPE=facebook:${contactInfo.facebook}` : ''}
+${contactInfo?.instagram ? `X-SOCIALPROFILE;TYPE=instagram:${contactInfo.instagram}` : ''}
+${contactInfo?.linkedin ? `X-SOCIALPROFILE;TYPE=linkedin:${contactInfo.linkedin}` : ''}
+${contactInfo?.twitter ? `X-SOCIALPROFILE;TYPE=twitter:${contactInfo.twitter}` : ''}
+${contactInfo?.youtube ? `X-SOCIALPROFILE;TYPE=youtube:${contactInfo.youtube}` : ''}
+${contactInfo?.github ? `X-SOCIALPROFILE;TYPE=github:${contactInfo.github}` : ''}
 END:VCARD`;
     
     return vcard.replace(/\n/g, '%0A');
