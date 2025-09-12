@@ -1,11 +1,15 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/guards/auth.guard';
 export const routes: Routes = [
-  // Ruta por defecto
+  // Ruta por defecto - Página de bienvenida
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'tarjeta/jeans-malon-reyna',
+    loadComponent: () =>
+      import('./pages/welcome/welcome.component').then(
+        (m) => m.WelcomeComponent
+      ),
+    title: 'Tarjeta Digital | Perfiles Profesionales del Futuro',
   },
 
   // Ruta pública para tarjetas digitales

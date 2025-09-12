@@ -119,6 +119,7 @@ export class PublicCardComponent implements OnInit {
       card.about_info?.description || `Tarjeta digital de ${name}`;
     const pageTitle = title ? `${name} - ${title}` : name;
 
+
     // Construir URL absoluta basada en el environment
     const absoluteUrl = `${environment.siteUrl}/tarjeta/${card.slug}`;
     
@@ -128,62 +129,66 @@ export class PublicCardComponent implements OnInit {
     // Título de la página
     this.title.setTitle(pageTitle);
 
+    // Remover meta tags existentes para asegurar reemplazo completo
+    this.removeExistingMetaTags();
+
     // Meta tags básicos
-    this.meta.updateTag({ name: 'description', content: description });
-    this.meta.updateTag({ name: 'keywords', content: this.generateKeywords(card) });
-    this.meta.updateTag({ name: 'author', content: name });
-    this.meta.updateTag({ name: 'robots', content: 'index, follow' });
+    this.meta.addTag({ name: 'description', content: description });
+    this.meta.addTag({ name: 'keywords', content: this.generateKeywords(card) });
+    this.meta.addTag({ name: 'author', content: name });
+    this.meta.addTag({ name: 'robots', content: 'index, follow' });
 
     // Canonical URL
-    this.meta.updateTag({ name: 'canonical', content: absoluteUrl });
+    this.meta.addTag({ rel: 'canonical', href: absoluteUrl });
 
     // Open Graph básico
-    this.meta.updateTag({ property: 'og:title', content: pageTitle });
-    this.meta.updateTag({ property: 'og:description', content: description });
-    this.meta.updateTag({ property: 'og:type', content: 'profile' });
-    this.meta.updateTag({ property: 'og:url', content: absoluteUrl });
-    this.meta.updateTag({ property: 'og:site_name', content: environment.siteName });
-    this.meta.updateTag({ property: 'og:locale', content: 'es_ES' });
-    this.meta.updateTag({ property: 'og:updated_time', content: new Date().toISOString() });
+    this.meta.addTag({ property: 'og:title', content: pageTitle });
+    this.meta.addTag({ property: 'og:description', content: description });
+    this.meta.addTag({ property: 'og:type', content: 'profile' });
+    this.meta.addTag({ property: 'og:url', content: absoluteUrl });
+    this.meta.addTag({ property: 'og:site_name', content: environment.siteName });
+    this.meta.addTag({ property: 'og:locale', content: 'es_ES' });
+    this.meta.addTag({ property: 'og:updated_time', content: new Date().toISOString() });
 
     // Open Graph imágenes
-    this.meta.updateTag({ property: 'og:image', content: imageUrl });
-    this.meta.updateTag({ property: 'og:image:width', content: '1200' });
-    this.meta.updateTag({ property: 'og:image:height', content: '630' });
-    this.meta.updateTag({ property: 'og:image:type', content: 'image/jpeg' });
-    this.meta.updateTag({ property: 'og:image:alt', content: `Foto de perfil de ${name}` });
+    this.meta.addTag({ property: 'og:image', content: imageUrl });
+    this.meta.addTag({ property: 'og:image:width', content: '1200' });
+    this.meta.addTag({ property: 'og:image:height', content: '630' });
+    this.meta.addTag({ property: 'og:image:type', content: 'image/jpeg' });
+    this.meta.addTag({ property: 'og:image:alt', content: `Foto de perfil de ${name}` });
 
     // Open Graph Profile (para perfiles profesionales)
     if (card.personal_info?.name) {
-      this.meta.updateTag({ property: 'profile:first_name', content: card.personal_info.name.split(' ')[0] });
-      this.meta.updateTag({ property: 'profile:last_name', content: card.personal_info.name.split(' ').slice(1).join(' ') });
-      this.meta.updateTag({ property: 'profile:username', content: card.slug });
+      this.meta.addTag({ property: 'profile:first_name', content: card.personal_info.name.split(' ')[0] });
+      this.meta.addTag({ property: 'profile:last_name', content: card.personal_info.name.split(' ').slice(1).join(' ') });
+      this.meta.addTag({ property: 'profile:username', content: card.slug });
     }
 
     // Twitter Cards
-    this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
-    this.meta.updateTag({ name: 'twitter:title', content: pageTitle });
-    this.meta.updateTag({ name: 'twitter:description', content: description });
-    this.meta.updateTag({ name: 'twitter:image', content: imageUrl });
-    this.meta.updateTag({ name: 'twitter:image:alt', content: `Foto de perfil de ${name}` });
+    this.meta.addTag({ name: 'twitter:card', content: 'summary_large_image' });
+    this.meta.addTag({ name: 'twitter:title', content: pageTitle });
+    this.meta.addTag({ name: 'twitter:description', content: description });
+    this.meta.addTag({ name: 'twitter:image', content: imageUrl });
+    this.meta.addTag({ name: 'twitter:image:alt', content: `Foto de perfil de ${name}` });
     
     // Twitter adicional
     if (card.contact_info?.twitter) {
-      this.meta.updateTag({ name: 'twitter:creator', content: `@${card.contact_info.twitter}` });
+      this.meta.addTag({ name: 'twitter:creator', content: `@${card.contact_info.twitter}` });
     }
 
     // Información profesional adicional
     if (card.personal_info?.title) {
-      this.meta.updateTag({ name: 'profile:job_title', content: card.personal_info.title });
+      this.meta.addTag({ name: 'profile:job_title', content: card.personal_info.title });
     }
 
     // Información de contacto estructurada
     if (card.contact_info?.email) {
-      this.meta.updateTag({ name: 'contact:email', content: card.contact_info.email });
+      this.meta.addTag({ name: 'contact:email', content: card.contact_info.email });
     }
     if (card.contact_info?.phone) {
-      this.meta.updateTag({ name: 'contact:phone_number', content: card.contact_info.phone });
+      this.meta.addTag({ name: 'contact:phone_number', content: card.contact_info.phone });
     }
+
   }
 
   /**
@@ -304,6 +309,59 @@ export class PublicCardComponent implements OnInit {
     script.textContent = JSON.stringify(structuredData, null, 2);
     script.id = 'structured-data-person';
     this.document.head.appendChild(script);
+  }
+
+  /**
+   * Remover meta tags existentes para asegurar reemplazo completo
+   */
+  private removeExistingMetaTags(): void {
+    // Lista de meta tags a remover para evitar duplicados
+    const metaTagsToRemove = [
+      // SEO básico
+      'name="description"',
+      'name="keywords"', 
+      'name="author"',
+      'name="robots"',
+      // Open Graph
+      'property="og:title"',
+      'property="og:description"',
+      'property="og:type"',
+      'property="og:url"',
+      'property="og:image"',
+      'property="og:image:width"',
+      'property="og:image:height"',
+      'property="og:image:type"',
+      'property="og:image:alt"',
+      'property="og:updated_time"',
+      // Profile
+      'property="profile:first_name"',
+      'property="profile:last_name"',
+      'property="profile:username"',
+      'name="profile:job_title"',
+      // Twitter
+      'name="twitter:card"',
+      'name="twitter:title"',
+      'name="twitter:description"',
+      'name="twitter:image"',
+      'name="twitter:image:alt"',
+      'name="twitter:creator"',
+      // Contact
+      'name="contact:email"',
+      'name="contact:phone_number"'
+    ];
+
+    metaTagsToRemove.forEach(selector => {
+      const existingTag = this.document.querySelector(`meta[${selector}]`);
+      if (existingTag) {
+        existingTag.remove();
+      }
+    });
+
+    // Remover canonical existente
+    const existingCanonical = this.document.querySelector('link[rel="canonical"]');
+    if (existingCanonical) {
+      existingCanonical.remove();
+    }
   }
 
   /**
