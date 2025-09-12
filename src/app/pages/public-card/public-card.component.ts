@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, DestroyRef } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -8,12 +8,14 @@ import { DigitalCardComponent } from '../../components/digital-card/digital-card
 import { PublicDigitalCardService } from '../../services/public-digital-card.service';
 import { DigitalCard } from '../../interfaces/digital-card.interface';
 import { LoadingSpinnerComponent } from '../../components/shared/loading-spinner/loading-spinner.component';
+import { PwaInstallComponent } from '../../components/shared/pwa-install/pwa-install.component';
+import { ManifestService } from '../../services/manifest.service';
 import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-public-card',
   standalone: true,
-  imports: [CommonModule, DigitalCardComponent, LoadingSpinnerComponent],
+  imports: [CommonModule, DigitalCardComponent, LoadingSpinnerComponent, PwaInstallComponent],
   template: `
     <div
       class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"
@@ -54,6 +56,9 @@ import { environment } from '../../../environments/environment';
       </div>
       }
     </div>
+
+    <!-- PWA Install Component -->
+    <app-pwa-install [userCard]="cardData()"></app-pwa-install>
   `,
   styles: [
     `
@@ -64,13 +69,14 @@ import { environment } from '../../../environments/environment';
     `,
   ],
 })
-export class PublicCardComponent implements OnInit {
+export class PublicCardComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private meta = inject(Meta);
   private title = inject(Title);
   private document = inject(DOCUMENT);
   private publicCardService = inject(PublicDigitalCardService);
+  private manifestService = inject(ManifestService);
   private destroyRef = inject(DestroyRef);
 
   // Signals para el estado del componente
@@ -104,9 +110,15 @@ export class PublicCardComponent implements OnInit {
           if (card && this.publicCardService.validateDigitalCard(card)) {
             this.cardData.set(card);
             // Establecer la URL absoluta para pasarla al componente hijo
-            this.absoluteCardUrl.set(`${environment.siteUrl}/tarjeta/${card.slug}`);
+            const currentUrl = `${environment.siteUrl}/tarjeta/${card.slug}`;
+            this.absoluteCardUrl.set(currentUrl);
+            
             this.configureMetaTags(card);
             this.addStructuredData(card);
+            
+            // Generar manifest dinámico específico para esta tarjeta
+            this.manifestService.updateManifestLink(card, currentUrl);
+            
             this.isLoading.set(false);
           } else {
             this.handleError('Esta tarjeta no está disponible públicamente');
@@ -460,5 +472,10 @@ export class PublicCardComponent implements OnInit {
       name: 'description',
       content: 'La tarjeta digital solicitada no está disponible.',
     });
+  }
+
+  ngOnDestroy(): void {
+    // Limpiar manifest dinámico al salir del componente
+    this.manifestService.removeOldManifestURL();
   }
 }

@@ -1,0 +1,62 @@
+<!-- Botón de instalación directa simple -->
+<div *ngIf="(showInstallBanner || showDirectShortcut) && userCard" class="pwa-install-simple">
+  <button (click)="installApp()" class="install-simple-btn">
+    <span class="install-icon">📲</span>
+    <span class="install-text">Instalar App</span>
+  </button>
+</div>
+
+<!-- Instrucciones manuales para plataformas que no soportan prompt automático -->
+<div *ngIf="showManualInstructions" class="pwa-manual-instructions">
+  <div class="instructions-content">
+    <div class="instructions-header">
+      <div class="instructions-icon">💡</div>
+      <h4>Añadir a pantalla de inicio</h4>
+      <button (click)="dismissManualInstructions()" class="close-btn" aria-label="Cerrar">
+        ✕
+      </button>
+    </div>
+    <p class="instructions-text">{{ installInstructions }}</p>
+    <div class="platform-steps" [ngSwitch]="pwaStatus.platform">
+      <!-- iOS Instructions -->
+      <div *ngSwitchCase="'ios'" class="platform-guide">
+        <div class="step">
+          <span class="step-number">1</span>
+          <span class="step-text">Toca el botón de compartir 
+            <span class="icon-demo">📤</span>
+          </span>
+        </div>
+        <div class="step">
+          <span class="step-number">2</span>
+          <span class="step-text">Selecciona "Añadir a la pantalla de inicio"</span>
+        </div>
+      </div>
+
+      <!-- Android Chrome Instructions -->
+      <div *ngSwitchCase="'android'" class="platform-guide">
+        <div class="step">
+          <span class="step-number">1</span>
+          <span class="step-text">Toca el menú 
+            <span class="icon-demo">⋮</span>
+          </span>
+        </div>
+        <div class="step">
+          <span class="step-number">2</span>
+          <span class="step-text">Selecciona "Añadir a la pantalla de inicio"</span>
+        </div>
+      </div>
+
+      <!-- Desktop Instructions -->
+      <div *ngSwitchDefault class="platform-guide">
+        <div class="step">
+          <span class="step-number">1</span>
+          <span class="step-text">Busca el icono de instalación en la barra de direcciones</span>
+        </div>
+        <div class="step">
+          <span class="step-number">2</span>
+          <span class="step-text">Haz clic en "Instalar" cuando aparezca</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

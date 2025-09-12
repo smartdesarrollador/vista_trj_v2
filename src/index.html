@@ -6,7 +6,7 @@
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-    
+
     <!-- 
     RESPALDO DE META TAGS ESTÁTICOS REMOVIDOS PARA PERMITIR OPEN GRAPH DINÁMICO
     
@@ -29,68 +29,125 @@
     <meta name="author" content="Tarjeta Digital">
     <link rel="canonical" href="https://tarjeta-jeans.smartdigitaltec.com">
     -->
+    <meta
+      property="og:image"
+      content="https://tarjeta-holografico.smartdigitaltec.com/assets/imagen/og/tarjeta_digital.jpg"
+    />
+    <meta
+      name="twitter:image"
+      content="https://tarjeta-holografico.smartdigitaltec.com/assets/imagen/og/tarjeta_digital.jpg"
+    />
 
     <!-- Meta tags genéricos como fallback (mantenidos) -->
-    <meta property="og:site_name" content="Tarjeta Digital">
-    <meta property="og:locale" content="es_ES">
-    <meta name="application-name" content="Tarjeta Digital">
-    
+    <meta property="og:site_name" content="Tarjeta Digital" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="application-name" content="Tarjeta Digital" />
+
     <!-- Las meta etiquetas Open Graph y Twitter han sido eliminadas. -->
     <!-- Serán generadas dinámicamente por Angular Universal (SSR) para cada tarjeta. -->
-    <meta name="description" content="Tarjeta Digital - Perfiles profesionales interactivos">
+    <meta
+      name="description"
+      content="Tarjeta Digital - Perfiles profesionales interactivos"
+    />
 
     <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-    
+    <link rel="manifest" href="manifest.json" />
+
     <!-- PWA Meta Tags -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Tarjeta Digital">
-    <meta name="application-name" content="Tarjeta Digital">
-    <meta name="msapplication-TileColor" content="#000000">
-    <meta name="msapplication-TileImage" content="assets/pwa/icon_JE_512.png">
-    <meta name="theme-color" content="#00ffff">
-    
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="Tarjeta Digital" />
+    <meta name="application-name" content="Tarjeta Digital" />
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta name="msapplication-TileImage" content="assets/pwa/icon_JE_512.png" />
+    <meta name="theme-color" content="#00ffff" />
+
     <!-- Apple Touch Icons -->
-    <link rel="apple-touch-icon" href="assets/pwa/apple-touch-icon-180x180.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/pwa/apple-touch-icon-180x180.png">
-    
+    <link
+      rel="apple-touch-icon"
+      href="assets/pwa/apple-touch-icon-180x180.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="assets/pwa/apple-touch-icon-180x180.png"
+    />
+
     <!-- PWA Icons for various devices -->
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/pwa/icon_JE_192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="assets/pwa/icon_JE_512.png">
-    
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="assets/pwa/icon_JE_192.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="assets/pwa/icon_JE_512.png"
+    />
+
     <!-- Microsoft Windows/Edge PWA -->
-    <meta name="msapplication-starturl" content="/">
-    <meta name="msapplication-navbutton-color" content="#00ffff">
-    
+    <meta name="msapplication-starturl" content="/" />
+    <meta name="msapplication-navbutton-color" content="#00ffff" />
+
     <!-- iOS Safari PWA -->
-    <meta name="apple-touch-fullscreen" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
 
     <!-- Preconnect for faster font loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    
+
     <!-- Preload critical fonts -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
-    
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript
+      ><link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    /></noscript>
+
     <!-- Load Material Icons asynchronously -->
-    <link rel="preload" href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap"></noscript>
-    
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript
+      ><link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap"
+    /></noscript>
+
     <!-- Resource hints for better performance -->
-    <link rel="dns-prefetch" href="//fonts.googleapis.com">
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+
     <!-- Critical CSS inline (opcional) -->
     <style>
       /* Critical loading styles */
-      body { font-family: system-ui, -apple-system, sans-serif; }
-      .loading-spinner { animation: spin 1s linear infinite; }
-      @keyframes spin { to { transform: rotate(360deg); } }
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+      .loading-spinner {
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
     </style>
   </head>
   <body>

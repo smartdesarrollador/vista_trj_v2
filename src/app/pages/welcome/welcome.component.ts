@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
 import { environment } from '../../../environments/environment';
+import { PwaInstallComponent } from '../../components/shared/pwa-install/pwa-install.component';
 
 @Component({
   selector: 'app-welcome',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, PwaInstallComponent],
   templateUrl: './welcome.component.html',
   styleUrl: './welcome.component.css'
 })
