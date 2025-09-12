@@ -30,6 +30,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   // Input para recibir datos externos
   @Input() cardData: DigitalCard | null = null;
   @Input() hideShareButtons = false;
+  @Input() shareUrl: string | null = null; // <-- NUEVO INPUT
 
   // Propiedades existentes para compatibilidad
   digitalCard: DigitalCard | null = null;
@@ -49,7 +50,17 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   // Share functionality properties
   showShareMenu = false;
   copyButtonText = 'Copiar enlace';
-  private readonly cardUrl = 'https://tarjeta-jeans.smartdigitaltec.com';
+  
+  // La URL para compartir ahora es dinámica
+  private get cardUrl(): string {
+    if (this.shareUrl) {
+      return this.shareUrl;
+    }
+    if (isPlatformBrowser(this.platformId)) {
+      return window.location.href;
+    }
+    return '';
+  }
 
   private subscription: Subscription = new Subscription();
 

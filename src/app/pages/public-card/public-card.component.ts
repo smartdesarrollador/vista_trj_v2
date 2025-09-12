@@ -46,7 +46,11 @@ import { environment } from '../../../environments/environment';
       <div
         class="relative z-10 flex justify-center items-center min-h-screen py-8 px-4"
       >
-        <app-digital-card [cardData]="cardData()" [hideShareButtons]="false" />
+        <app-digital-card 
+          [cardData]="cardData()" 
+          [hideShareButtons]="false"
+          [shareUrl]="absoluteCardUrl()"
+        />
       </div>
       }
     </div>
@@ -73,6 +77,7 @@ export class PublicCardComponent implements OnInit {
   cardData = signal<DigitalCard | null>(null);
   isLoading = signal<boolean>(true);
   error = signal<string | null>(null);
+  absoluteCardUrl = signal<string>(''); // <-- Propiedad para la URL absoluta
 
   ngOnInit(): void {
     this.route.params
@@ -98,6 +103,8 @@ export class PublicCardComponent implements OnInit {
         next: (card) => {
           if (card && this.publicCardService.validateDigitalCard(card)) {
             this.cardData.set(card);
+            // Establecer la URL absoluta para pasarla al componente hijo
+            this.absoluteCardUrl.set(`${environment.siteUrl}/tarjeta/${card.slug}`);
             this.configureMetaTags(card);
             this.addStructuredData(card);
             this.isLoading.set(false);
