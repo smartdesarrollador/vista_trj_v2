@@ -3,4 +3,8 @@ export const environment = {
   urlDominioApi: 'https://api-tarjeta-holografico.smartdigitaltec.com',
   urlRaiz: 'https://api-tarjeta-holografico.smartdigitaltec.com/api',
   apiUrl: 'https://api-tarjeta-holografico.smartdigitaltec.com/api',
+  // Configuración para Open Graph dinámico
+  siteUrl: 'https://tarjeta-holografico.smartdigitaltec.com',
+  siteName: 'Tarjeta Digital',
+  defaultImage: '/assets/images/default-og-image.svg'
 };
