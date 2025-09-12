@@ -6,5 +6,5 @@ export const environment = {
   // Configuración para Open Graph dinámico
   siteUrl: 'http://localhost:4200',
   siteName: 'Tarjeta Digital',
-  defaultImage: '/assets/images/default-og-image.svg'
+  defaultImage: '/assets/imagen/og/tarjeta_digital.jpg'
 };

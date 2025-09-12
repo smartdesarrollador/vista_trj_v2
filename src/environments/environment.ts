@@ -6,5 +6,5 @@ export const environment = {
   // Configuración para Open Graph dinámico
   siteUrl: 'https://tarjeta-holografico.smartdigitaltec.com',
   siteName: 'Tarjeta Digital',
-  defaultImage: '/assets/images/default-og-image.svg'
+  defaultImage: '/assets/imagen/og/tarjeta_digital.jpg'
 };

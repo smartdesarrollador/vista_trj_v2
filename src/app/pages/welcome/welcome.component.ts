@@ -57,7 +57,7 @@ export class WelcomeComponent implements OnInit {
     
     this.meta.updateTag({ 
       property: 'og:image', 
-      content: `${environment.siteUrl}/assets/images/default-og-image.svg` 
+      content: `${environment.siteUrl}${environment.defaultImage}` 
     });
 
     // Twitter Cards
@@ -78,7 +78,7 @@ export class WelcomeComponent implements OnInit {
     
     this.meta.updateTag({ 
       name: 'twitter:image', 
-      content: `${environment.siteUrl}/assets/images/default-og-image.svg` 
+      content: `${environment.siteUrl}${environment.defaultImage}` 
     });
   }
 }

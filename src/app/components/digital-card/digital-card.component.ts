@@ -50,7 +50,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   // Share functionality properties
   showShareMenu = false;
   copyButtonText = 'Copiar enlace';
-  
+
   // La URL para compartir ahora es dinámica
   private get cardUrl(): string {
     if (this.shareUrl) {
@@ -112,7 +112,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
     this.error = null;
 
     const cardSubscription = this.digitalCardService
-      .getDigitalCardBySlug('jeans-malon-reyna')
+      .getDigitalCardBySlug('default-user')
       .subscribe({
         next: (data) => {
           if (data && this.digitalCardService.validateDigitalCard(data)) {
@@ -156,12 +156,12 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
   get profileImageUrl(): string | null {
     const photo = this.displayData()?.personal_info?.photo;
     if (!photo) return null;
-    
+
     // Si ya es una URL completa, devolverla tal como está
     if (photo.startsWith('http://') || photo.startsWith('https://')) {
       return photo;
     }
-    
+
     // Construir URL completa para imágenes locales usando urlDominioApi
     return `${environment.urlDominioApi}/${photo}`;
   }
@@ -507,7 +507,7 @@ export class DigitalCardComponent implements OnInit, OnDestroy {
     const text = encodeURIComponent(
       `¡Mira mi tarjeta digital! ${
         this.digitalCard?.personal_info?.name || ''
-      } - Especializado en desarrollo web moderno`
+      } `
     );
     const url = encodeURIComponent(this.cardUrl);
     const whatsappUrl = `https://wa.me/?text=${text}%20${url}`;

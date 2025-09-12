@@ -200,23 +200,11 @@ export class PublicCardComponent implements OnInit {
 
   /**
    * Obtener URL absoluta para imagen de Open Graph
-   * Optimizada para redes sociales (1200x630 recomendado)
+   * SIEMPRE usa la imagen por defecto para todos los usuarios
    */
   private getAbsoluteImageUrl(imageUrl?: string): string {
-    if (!imageUrl) {
-      // Usar imagen por defecto
-      return `${environment.siteUrl}${environment.defaultImage}`;
-    }
-
-    // Si ya es una URL absoluta, devolverla tal como está
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-      // Para URLs externas, verificar si necesitan parámetros de optimización
-      return this.addImageOptimizationParams(imageUrl);
-    }
-
-    // Construir URL absoluta para imágenes del servidor
-    const fullImageUrl = `${environment.urlDominioApi}/${imageUrl}`;
-    return this.addImageOptimizationParams(fullImageUrl);
+    // SIEMPRE usar la imagen por defecto para todos los usuarios
+    return `${environment.siteUrl}${environment.defaultImage}`;
   }
 
   /**
