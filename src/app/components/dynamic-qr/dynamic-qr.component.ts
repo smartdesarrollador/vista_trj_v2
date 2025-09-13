@@ -184,7 +184,7 @@ export class DynamicQrComponent implements OnInit {
         label: 'Guardar Contacto',
         description: `Escanéame para guardar el contacto de ${userName}`,
         icon: '👤',
-        data: `${baseUrl}/api/vcard/${this.userCard.slug}`,
+        data: `${baseUrl}/tarjeta/${this.userCard.slug}`,
         type: 'vcard'
       },
       {
