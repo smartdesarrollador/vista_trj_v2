@@ -12,7 +12,7 @@ export const routes: Routes = [
     title: 'Tarjeta Digital | Perfiles Profesionales del Futuro',
   },
 
-  // Ruta pública para tarjetas digitales
+  // Ruta pública para tarjetas digitales (diseño clásico)
   {
     path: 'tarjeta/:slug',
     loadComponent: () =>
@@ -20,6 +20,17 @@ export const routes: Routes = [
         (m) => m.PublicCardComponent
       ),
     title: 'Tarjeta Digital',
+  },
+
+  // Ruta pública para tarjetas futuristas
+  {
+    path: 'futuristic/:slug',
+    loadComponent: () =>
+      import('./pages/futuristic-card-page/futuristic-card-page.component').then(
+        (m) => m.FuturisticCardPageComponent
+      ),
+    title: 'Tarjeta Futurista',
+    data: { theme: 'futuristic' }
   },
 
   // Rutas de autenticación

@@ -1,0 +1,286 @@
+<!-- Loading State - Solo mostrar si no hay cardData externa -->
+<div
+  *ngIf="isLoading && !cardData"
+  class="max-w-sm mx-auto bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 rounded-2xl shadow-2xl overflow-hidden p-8 text-center border border-cyan-500/30"
+>
+  <div class="relative">
+    <!-- Futuristic Loading Spinner -->
+    <div class="cyber-spinner mx-auto mb-4"></div>
+    <div class="absolute inset-0 cyber-glow"></div>
+  </div>
+  <p class="text-cyan-300 font-mono text-sm">Cargando tarjeta futurista...</p>
+  <div class="loading-particles"></div>
+</div>
+
+<!-- Error State - Solo mostrar si no hay cardData externa -->
+<div
+  *ngIf="error && !isLoading && !cardData"
+  class="max-w-sm mx-auto bg-gradient-to-br from-red-900/20 via-slate-900 to-red-900/20 border border-red-500/30 rounded-2xl p-6 text-center backdrop-blur-sm"
+>
+  <div class="text-red-400 mb-2 relative">
+    <!-- Futuristic Error Icon -->
+    <div class="cyber-error-icon mx-auto"></div>
+  </div>
+  <p class="text-red-300 font-mono text-sm">{{ error }}</p>
+</div>
+
+<!-- Futuristic Particle Field Background -->
+<div class="futuristic-particles">
+  <!-- Particles will be created dynamically in TypeScript -->
+</div>
+
+<!-- Futuristic Card Container -->
+<div
+  *ngIf="displayData() && (!isLoading || cardData) && !error"
+  class="futuristic-container"
+  [class.glitch-active]="glitchActive"
+>
+  <!-- Main Futuristic Card -->
+  <div class="cyber-card">
+
+    <!-- Holographic Header Section -->
+    <div class="cyber-header">
+      <div class="holo-frame">
+
+        <!-- Profile Image Section -->
+        <div class="profile-section">
+          <div class="image-container">
+            <!-- Profile Image -->
+            <img
+              *ngIf="profileImageUrl"
+              [src]="profileImageUrl"
+              [alt]="personal_info?.name || 'Profile'"
+              class="profile-image"
+              (load)="onImageLoad($event)"
+              (error)="onImageError($event)"
+            />
+
+            <!-- Fallback Initials -->
+            <div
+              *ngIf="!profileImageUrl"
+              class="profile-initials"
+            >
+              {{ getInitials(personal_info?.name) }}
+            </div>
+          </div>
+
+          <!-- Holographic Ring Effect -->
+          <div class="holo-rings">
+            <div class="holo-ring ring-1"></div>
+            <div class="holo-ring ring-2"></div>
+            <div class="holo-ring ring-3"></div>
+          </div>
+        </div>
+
+        <!-- Personal Info Section -->
+        <div class="info-section">
+          <h1 class="cyber-name" [class.glitch-text]="glitchActive">
+            {{ personal_info?.name || 'Nombre no disponible' }}
+          </h1>
+
+          <h2 class="cyber-title">
+            {{ personal_info?.title || 'Título profesional' }}
+          </h2>
+
+          <div class="cyber-location" *ngIf="personal_info?.location">
+            <span class="location-icon">📍</span>
+            {{ personal_info?.location }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Matrix Section -->
+    <div class="data-matrix">
+
+      <!-- Contact Information -->
+      <div class="data-block" *ngIf="contact_info">
+        <h3 class="block-title">CONTACT.EXE</h3>
+
+        <div class="contact-grid">
+          <!-- Email -->
+          <a
+            *ngIf="contact_info.email"
+            [href]="'mailto:' + contact_info.email"
+            class="contact-item email-item"
+          >
+            <div class="contact-icon">📧</div>
+            <div class="contact-data">
+              <span class="contact-label">EMAIL</span>
+              <span class="contact-value">{{ contact_info.email }}</span>
+            </div>
+          </a>
+
+          <!-- Phone -->
+          <a
+            *ngIf="contact_info.phone"
+            [href]="'tel:' + getCleanPhone(contact_info.phone)"
+            class="contact-item phone-item"
+          >
+            <div class="contact-icon">📱</div>
+            <div class="contact-data">
+              <span class="contact-label">PHONE</span>
+              <span class="contact-value">{{ formatPhone(contact_info.phone) }}</span>
+            </div>
+          </a>
+
+          <!-- Website -->
+          <a
+            *ngIf="contact_info.website"
+            [href]="contact_info.website"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="contact-item web-item"
+          >
+            <div class="contact-icon">🌐</div>
+            <div class="contact-data">
+              <span class="contact-label">WEB</span>
+              <span class="contact-value">{{ getCleanUrl(contact_info.website) }}</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Social Networks Matrix -->
+      <div class="social-matrix" *ngIf="contact_info">
+        <h3 class="block-title">SOCIAL.NET</h3>
+
+        <div class="social-grid">
+          <!-- LinkedIn -->
+          <a
+            *ngIf="contact_info.linkedin"
+            [href]="contact_info.linkedin"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-link linkedin"
+          >
+            <div class="social-icon">💼</div>
+            <span>LINKEDIN</span>
+          </a>
+
+          <!-- GitHub -->
+          <a
+            *ngIf="contact_info.github"
+            [href]="contact_info.github"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-link github"
+          >
+            <div class="social-icon">👨‍💻</div>
+            <span>GITHUB</span>
+          </a>
+
+          <!-- Twitter -->
+          <a
+            *ngIf="contact_info.twitter"
+            [href]="contact_info.twitter"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-link twitter"
+          >
+            <div class="social-icon">🐦</div>
+            <span>TWITTER</span>
+          </a>
+
+          <!-- Instagram -->
+          <a
+            *ngIf="contact_info.instagram"
+            [href]="contact_info.instagram"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-link instagram"
+          >
+            <div class="social-icon">📸</div>
+            <span>INSTAGRAM</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- About Information -->
+      <div class="data-block" *ngIf="about_info">
+        <h3 class="block-title">PROFILE.DAT</h3>
+
+        <div class="about-content">
+          <p class="cyber-description" *ngIf="about_info.description">
+            {{ about_info.description }}
+          </p>
+
+          <!-- Skills Array -->
+          <div class="skills-array" *ngIf="about_info.skills && about_info.skills.length > 0">
+            <h4 class="skills-title">SKILLS[]</h4>
+            <div class="skills-grid">
+              <span
+                *ngFor="let skill of about_info.skills; trackBy: trackBySkill"
+                class="skill-tag"
+              >
+                {{ skill }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Experience Counter -->
+          <div class="experience-counter" *ngIf="about_info.experience">
+            <span class="counter-label">EXP:</span>
+            <span class="counter-value">{{ about_info.experience }}+ años</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QR Code Section -->
+    <div class="qr-matrix">
+      <h3 class="block-title">QR.LINK</h3>
+      <div class="qr-container">
+        <app-dynamic-qr [userCard]="displayData()"></app-dynamic-qr>
+      </div>
+    </div>
+
+    <!-- Action Panel -->
+    <div class="action-panel" *ngIf="!hideShareButtons">
+      <button
+        (click)="toggleShareMenu()"
+        class="cyber-button share-button"
+        [class.active]="showShareMenu"
+      >
+        <span class="button-icon">🚀</span>
+        <span class="button-text">SHARE</span>
+      </button>
+
+      <!-- Share Menu -->
+      <div class="share-matrix" *ngIf="showShareMenu">
+        <button (click)="shareToWhatsApp()" class="share-option whatsapp">
+          <span class="share-icon">💬</span>
+          <span>WhatsApp</span>
+        </button>
+
+        <button (click)="shareToLinkedIn()" class="share-option linkedin">
+          <span class="share-icon">💼</span>
+          <span>LinkedIn</span>
+        </button>
+
+        <button (click)="shareToTwitter()" class="share-option twitter">
+          <span class="share-icon">🐦</span>
+          <span>Twitter</span>
+        </button>
+
+        <button (click)="shareToFacebook()" class="share-option facebook">
+          <span class="share-icon">📘</span>
+          <span>Facebook</span>
+        </button>
+
+        <button (click)="copyToClipboard()" class="share-option copy">
+          <span class="share-icon">📋</span>
+          <span>{{ copyButtonText }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cyber Grid Background -->
+  <div class="cyber-grid"></div>
+
+  <!-- Matrix Rain Effect -->
+  <div class="matrix-rain">
+    <div class="rain-drop" *ngFor="let drop of [1,2,3,4,5,6,7,8,9,10]; trackBy: trackByDrop"></div>
+  </div>
+</div>
