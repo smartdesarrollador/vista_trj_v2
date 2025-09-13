@@ -77,9 +77,9 @@ export class PwaInstallComponent implements OnInit, OnDestroy {
 
   async installApp(): Promise<void> {
     if (!isPlatformBrowser(this.platformId)) return;
-    
+
     console.log('[PWA] Install button clicked');
-    
+
     // Primero intentar el prompt automático
     const installed = await this.pwaService.promptInstall();
     if (installed) {
@@ -87,13 +87,30 @@ export class PwaInstallComponent implements OnInit, OnDestroy {
       this.showDirectShortcut = false;
       return;
     }
-    
-    // Si no funciona el prompt automático, mostrar instrucciones específicas por plataforma
+
+    // Detectar si es escritorio o móvil
     const userAgent = navigator.userAgent.toLowerCase();
+    const isDesktop = !/iphone|ipad|ipod|android/.test(userAgent);
     const userName = this.userCard?.name || this.userCard?.nombre || 'esta tarjeta';
-    
+
+    if (isDesktop) {
+      // Para escritorio: intentar instalación automática sin mostrar alert
+      console.log('[PWA] Desktop detected - attempting direct installation');
+
+      // Verificar si hay un prompt event disponible
+      if (this.pwaService.canInstall()) {
+        // Ya se intentó arriba, si llegamos aquí es porque falló
+        console.log('[PWA] Prompt failed, trying alternative methods');
+      }
+
+      // Intentar trigger del evento de instalación del navegador
+      this.triggerBrowserInstallPrompt();
+      return;
+    }
+
+    // Para móvil: mostrar instrucciones como antes
     let mensaje = '';
-    
+
     if (/iphone|ipad|ipod/.test(userAgent)) {
       // iOS Safari
       mensaje = `Para instalar la tarjeta de ${userName}:\n\n` +
@@ -116,16 +133,11 @@ export class PwaInstallComponent implements OnInit, OnDestroy {
                   `3. Confirma la instalación\n\n` +
                   `¡La tarjeta aparecerá como una app!`;
       }
-    } else {
-      // Desktop (Windows/Mac/Linux)
-      mensaje = `Para instalar la tarjeta de ${userName}:\n\n` +
-                `1. Busca el icono de instalación (⊞ +) en la barra de direcciones\n` +
-                `2. Haz clic en "Instalar" cuando aparezca\n` +
-                `3. O usa Ctrl+D (Cmd+D en Mac) para añadir a favoritos\n\n` +
-                `¡La tarjeta estará disponible como una app!`;
     }
-    
-    alert(mensaje);
+
+    if (mensaje) {
+      alert(mensaje);
+    }
   }
 
   dismissBanner(): void {
@@ -179,11 +191,126 @@ export class PwaInstallComponent implements OnInit, OnDestroy {
 
   dismissDirectShortcut(): void {
     this.showDirectShortcut = false;
-    
+
     // Guardar que se ha rechazado para este usuario
     if (typeof localStorage !== 'undefined' && this.userCard) {
       const userId = this.userCard.id || this.userCard.usuario_id || 'unknown';
       localStorage.setItem(`pwa-shortcut-dismissed-${userId}`, Date.now().toString());
     }
+  }
+
+  private triggerBrowserInstallPrompt(): void {
+    // Método para intentar trigger de instalación en escritorio
+    console.log('[PWA] Triggering browser install prompt for desktop');
+
+    // Intentar diferentes métodos según el navegador
+    const userAgent = navigator.userAgent.toLowerCase();
+
+    if (/chrome/.test(userAgent) || /chromium/.test(userAgent)) {
+      // Para Chrome/Chromium - intentar dispatch del evento
+      this.dispatchInstallEvent();
+    } else if (/firefox/.test(userAgent)) {
+      // Para Firefox - crear shortcut directo
+      this.createFirefoxShortcut();
+    } else if (/edge/.test(userAgent)) {
+      // Para Edge - intentar método de Edge
+      this.dispatchInstallEvent();
+    } else {
+      // Fallback genérico
+      this.createGenericShortcut();
+    }
+  }
+
+  private dispatchInstallEvent(): void {
+    // Intentar disparar el evento de instalación
+    try {
+      // Crear y disparar evento personalizado
+      const installEvent = new CustomEvent('beforeinstallprompt', {
+        bubbles: true,
+        cancelable: true
+      });
+
+      // Añadir método prompt al evento
+      (installEvent as any).prompt = () => {
+        console.log('[PWA] Custom prompt triggered');
+        // Aquí podríamos mostrar nuestra propia UI de instalación
+        this.showCustomInstallDialog();
+      };
+
+      window.dispatchEvent(installEvent);
+
+      // Si tenemos el evento, intentar usarlo
+      if ((installEvent as any).prompt) {
+        (installEvent as any).prompt();
+      }
+
+    } catch (error) {
+      console.warn('[PWA] Could not dispatch install event:', error);
+      this.createGenericShortcut();
+    }
+  }
+
+  private showCustomInstallDialog(): void {
+    // Mostrar dialog personalizado para instalación
+    const userName = this.userCard?.name || this.userCard?.nombre || 'esta tarjeta';
+
+    if (confirm(`¿Quieres instalar la tarjeta de ${userName} como una aplicación?\n\nEsto creará un acceso directo en tu escritorio.`)) {
+      this.createDesktopShortcut();
+    }
+  }
+
+  private createFirefoxShortcut(): void {
+    // Para Firefox, intentar usar la API de manifesto
+    console.log('[PWA] Creating Firefox shortcut');
+    this.createGenericShortcut();
+  }
+
+  private createGenericShortcut(): void {
+    // Crear acceso directo genérico
+    console.log('[PWA] Creating generic desktop shortcut');
+
+    // Intentar abrir en nueva ventana para simular app
+    const currentUrl = window.location.href;
+    const appName = this.userCard?.name || 'Tarjeta Digital';
+
+    // Abrir en ventana de app
+    const appWindow = window.open(
+      currentUrl,
+      '_blank',
+      'width=400,height=600,menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes'
+    );
+
+    if (appWindow) {
+      // Configurar la ventana como app
+      appWindow.document.title = appName;
+      console.log('[PWA] Opened as app window');
+    }
+  }
+
+  private createDesktopShortcut(): void {
+    // Crear acceso directo en escritorio (limitado por seguridad del navegador)
+    console.log('[PWA] Attempting to create desktop shortcut');
+
+    const currentUrl = window.location.href;
+    const appName = this.userCard?.name || 'Tarjeta Digital';
+
+    // Crear enlace de descarga de shortcut
+    const shortcutData = `[InternetShortcut]\nURL=${currentUrl}\nIconIndex=0`;
+    const blob = new Blob([shortcutData], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+
+    // Crear enlace de descarga
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${appName}.url`;
+    link.style.display = 'none';
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+
+    console.log('[PWA] Desktop shortcut file created');
   }
 }
