@@ -26,11 +26,20 @@ export const routes: Routes = [
   {
     path: 'futuristic/:slug',
     loadComponent: () =>
-      import('./pages/futuristic-card-page/futuristic-card-page.component').then(
-        (m) => m.FuturisticCardPageComponent
-      ),
+      import(
+        './pages/futuristic-card-page/futuristic-card-page.component'
+      ).then((m) => m.FuturisticCardPageComponent),
     title: 'Tarjeta Futurista',
-    data: { theme: 'futuristic' }
+    data: { theme: 'futuristic' },
+  },
+  // Ruta pública para tarjetas tres
+  {
+    path: 'tarjeta-tres/:slug',
+    loadComponent: () =>
+      import('./pages/public-card-tres/public-card-tres.component').then(
+        (m) => m.PublicCardTresComponent
+      ),
+    title: 'Tarjeta Digital',
   },
 
   // Rutas de autenticación
