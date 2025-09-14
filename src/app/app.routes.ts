@@ -24,7 +24,7 @@ export const routes: Routes = [
 
   // Ruta pública para tarjetas futuristas
   {
-    path: 'futuristic/:slug',
+    path: 'tarjeta-dos/:slug',
     loadComponent: () =>
       import(
         './pages/futuristic-card-page/futuristic-card-page.component'

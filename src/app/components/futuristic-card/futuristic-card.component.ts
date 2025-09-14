@@ -13,16 +13,18 @@ import {
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 import { DigitalCard } from '../../interfaces/digital-card.interface';
 import { DigitalCardService } from '../../services/digital-card.service';
 import { PerformanceService } from '../../core/performance/performance.service';
 import { DynamicQrComponent } from '../dynamic-qr/dynamic-qr.component';
+import { CambiarTarjetaComponent } from '../cambiar-tarjeta/cambiar-tarjeta.component';
 import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-futuristic-card',
   standalone: true,
-  imports: [CommonModule, DynamicQrComponent],
+  imports: [CommonModule, DynamicQrComponent, CambiarTarjetaComponent],
   templateUrl: './futuristic-card.component.html',
   styleUrl: './futuristic-card.component.css',
 })
@@ -55,6 +57,9 @@ export class FuturisticCardComponent implements OnInit, OnDestroy {
   showShareMenu = false;
   copyButtonText = 'Copiar enlace';
 
+  // Current slug for navigation
+  currentSlug = '';
+
   // La URL para compartir ahora es dinámica
   private get cardUrl(): string {
     if (this.shareUrl) {
@@ -73,10 +78,16 @@ export class FuturisticCardComponent implements OnInit, OnDestroy {
     private elementRef: ElementRef,
     private renderer: Renderer2,
     private performanceService: PerformanceService,
+    private activatedRoute: ActivatedRoute,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
+    // Get current slug from route params
+    this.activatedRoute.params.subscribe(params => {
+      this.currentSlug = params['slug'] || '';
+    });
+
     // Solo cargar del servicio si no hay datos externos
     if (!this.cardData) {
       this.loadDigitalCard();
